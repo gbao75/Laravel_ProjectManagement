@@ -73,9 +73,17 @@
                     </span>
                 </div>
 
-                <span class="account-placeholder">
-                    Khách
-                </span>
+                @auth
+                    <span class="account-placeholder">
+                        {{ auth()->user()->name }}
+                    </span>
+                @endauth
+
+                @guest
+                    <a href="{{ route('register') }}" class="account-placeholder">
+                        Đăng ký
+                    </a>
+                @endguest
             </header>
 
             <main class="page-content" id="main-content">
