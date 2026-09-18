@@ -102,8 +102,11 @@
             Tạo tài khoản
         </button>
 
-        <a href="{{ route('dashboard') }}" class="auth-back-link">
-            Về trang tổng quan
-        </a>
+        <p class="auth-switch">
+            Đã có tài khoản?
+            <a href="{{ route('login') }}">
+                Đăng nhập
+            </a>
+        </p>
     </form>
 @endsection

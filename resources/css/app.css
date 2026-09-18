@@ -440,3 +440,68 @@ h1 {
         padding: 24px 20px;
     }
 }
+
+.checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.checkbox-row input {
+    width: 17px;
+    height: 17px;
+    margin: 0;
+    accent-color: var(--primary);
+}
+
+.auth-switch {
+    margin: 0;
+    text-align: center;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.auth-switch a {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.auth-switch a:hover {
+    text-decoration: underline;
+}
+
+.auth-notice {
+    margin: 0 0 20px;
+    padding: 12px 14px;
+    color: #166534;
+    background: #f0fdf4;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.account-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.account-actions form {
+    margin: 0;
+}
+
+.logout-button {
+    padding: 7px 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    background: var(--surface);
+    font-size: 13px;
+}
+
+.logout-button:hover {
+    background: var(--background);
+}

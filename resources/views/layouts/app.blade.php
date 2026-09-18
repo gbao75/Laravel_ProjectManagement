@@ -6,7 +6,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'TaskFlow') | TaskFlow</title>
+    <title>@yield('title', 'ProjectManagement') | ProjectManagement</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -15,7 +15,7 @@
         <aside class="sidebar" id="sidebar">
             <a href="{{ route('dashboard') }}" class="brand">
                 <span class="brand-icon" aria-hidden="true">T</span>
-                <span>TaskFlow</span>
+                <span>ProjectManagement</span>
             </a>
 
             <p class="sidebar-label">KHÔNG GIAN LÀM VIỆC</p>
@@ -73,17 +73,27 @@
                     </span>
                 </div>
 
-                @auth
-                    <span class="account-placeholder">
-                        {{ auth()->user()->name }}
-                    </span>
-                @endauth
+                <div class="account-actions">
+        @auth
+            <span class="account-placeholder">
+                {{ auth()->user()->name }}
+            </span>
 
-                @guest
-                    <a href="{{ route('register') }}" class="account-placeholder">
-                        Đăng ký
-                    </a>
-                @endguest
+            <form method="POST" action="{{ route('logout') }}">
+                @csrf
+
+                <button type="submit" class="logout-button">
+                    Đăng xuất
+                </button>
+            </form>
+        @endauth
+
+        @guest
+            <a href="{{ route('login') }}" class="account-placeholder">
+                Đăng nhập
+            </a>
+        @endguest
+    </div>
             </header>
 
             <main class="page-content" id="main-content">

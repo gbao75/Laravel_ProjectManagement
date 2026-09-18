@@ -6,7 +6,7 @@
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title', 'Tài khoản') | TaskFlow</title>
+    <title>@yield('title', 'Tài khoản') | ProjectManagement</title>
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -15,7 +15,7 @@
     <main class="auth-container">
         <a href="{{ route('dashboard') }}" class="brand auth-brand">
             <span class="brand-icon" aria-hidden="true">T</span>
-            <span>TaskFlow</span>
+            <span>ProjectManagement</span>
         </a>
 
         <section class="auth-card">

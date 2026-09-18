@@ -13,6 +13,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
 use Laravel\Fortify\Fortify;
+use App\Http\Responses\LogoutResponse;
+use Laravel\Fortify\Contracts\LogoutResponse as LogoutResponseContract;
 
 class FortifyServiceProvider extends ServiceProvider
 {
@@ -21,7 +23,11 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(
+        LogoutResponseContract::class,
+        LogoutResponse::class
+    );
+
     }
 
     /**
@@ -34,15 +40,21 @@ class FortifyServiceProvider extends ServiceProvider
         Fortify::updateUserPasswordsUsing(UpdateUserPassword::class);
         Fortify::resetUserPasswordsUsing(ResetUserPassword::class);
         Fortify::redirectUserForTwoFactorAuthenticationUsing(RedirectIfTwoFactorAuthenticatable::class);
-
+        
         Fortify::registerView(function () {
             return view('auth.register');
         });
 
-        RateLimiter::for('login', function (Request $request) {
-            $throttleKey = Str::transliterate(Str::lower($request->input(Fortify::username())).'|'.$request->ip());
+        Fortify::loginView(function () {
+            return view('auth.login');
+        });
 
-            return Limit::perMinute(5)->by($throttleKey);
+        RateLimiter::for('login', function (Request $request) {
+            $email = (string) $request->string('email')->lower();
+
+            $key = hash('sha256', $email . '|' . $request->ip());
+
+            return Limit::perMinute(5)->by($key);
         });
 
         RateLimiter::for('two-factor', function (Request $request) {
