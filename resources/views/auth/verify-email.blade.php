@@ -36,6 +36,10 @@
             </button>
         </form>
 
+        <a href="{{ route('profile.edit') }}" class="auth-back-link">
+            Sửa thông tin hoặc email
+        </a>
+
         <form method="POST" action="{{ route('logout') }}">
             @csrf
 

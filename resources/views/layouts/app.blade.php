@@ -28,10 +28,18 @@
             <nav class="navigation" aria-label="Điều hướng chính">
                 <a
                     href="{{ route('dashboard') }}"
-                    class="nav-item is-active"
-                    aria-current="page"
+                    class="nav-item {{ request()->routeIs('dashboard') ? 'is-active' : '' }}"
+                    @if (request()->routeIs('dashboard')) aria-current="page" @endif
                 >
                     Tổng quan
+                </a>
+
+                <a
+                    href="{{ route('profile.edit') }}"
+                    class="nav-item {{ request()->routeIs('profile.*') ? 'is-active' : '' }}"
+                    @if (request()->routeIs('profile.*')) aria-current="page" @endif
+                >
+                    Hồ sơ cá nhân
                 </a>
 
                 <span class="nav-item is-disabled" aria-disabled="true">
@@ -75,9 +83,9 @@
 
                 <div class="account-actions">
         @auth
-            <span class="account-placeholder">
+            <a href="{{ route('profile.edit') }}" class="account-placeholder">
                 {{ auth()->user()->name }}
-            </span>
+            </a>
 
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
