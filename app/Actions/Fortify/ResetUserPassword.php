@@ -2,31 +2,37 @@
 
 namespace App\Actions\Fortify;
 
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\Rules\Password;
 use Laravel\Fortify\Contracts\ResetsUserPasswords;
 
 class ResetUserPassword implements ResetsUserPasswords
 {
-    use PasswordValidationRules;
-
-    /**
-     * Validate and reset the user's forgotten password.
-     *
-     * @param  array<string, string>  $input
-     *
-     * @throws ValidationException
-     */
-    public function reset(User $user, array $input): void
+    public function reset($user, array $input): void
     {
-        Validator::make($input, [
-            'password' => $this->passwordRules(),
-        ])->validate();
+        $validated = Validator::make(
+            $input,
+            [
+                'password' => [
+                    'required',
+                    'string',
+                    Password::min(8)->letters()->numbers(),
+                    'confirmed',
+                ],
+            ],
+            [
+                'password.required' => 'Vui lòng nhập mật khẩu mới.',
+                'password.string' => 'Mật khẩu không hợp lệ.',
+                'password.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+                'password.letters' => 'Mật khẩu phải chứa chữ cái.',
+                'password.numbers' => 'Mật khẩu phải chứa chữ số.',
+                'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
+            ]
+        )->validate();
 
         $user->forceFill([
-            'password' => Hash::make($input['password']),
+            'password' => Hash::make($validated['password']),
         ])->save();
     }
 }

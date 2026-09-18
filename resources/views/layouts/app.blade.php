@@ -14,8 +14,8 @@
     <div class="app-shell">
         <aside class="sidebar" id="sidebar">
             <a href="{{ route('dashboard') }}" class="brand">
-                <span class="brand-icon" aria-hidden="true">T</span>
-                <span>ProjectManagement</span>
+                <span class="brand-icon" aria-hidden="true">PM</span>
+                <span>ProjMgmt</span>
             </a>
 
             <p class="sidebar-label">KHÔNG GIAN LÀM VIỆC</p>

@@ -505,3 +505,7 @@ h1 {
 .logout-button:hover {
     background: var(--background);
 }
+
+.full-width {
+    width: 100%;
+}

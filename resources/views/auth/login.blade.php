@@ -72,6 +72,9 @@
             >
 
             <span>Ghi nhớ đăng nhập</span>
+            <a href="{{ route('password.request') }}" class="auth-back-link">
+                Quên mật khẩu?
+            </a>
         </label>
 
         <button type="submit" class="primary-button">

@@ -14,8 +14,8 @@
 <body class="auth-body">
     <main class="auth-container">
         <a href="{{ route('dashboard') }}" class="brand auth-brand">
-            <span class="brand-icon" aria-hidden="true">T</span>
-            <span>ProjectManagement</span>
+            <span class="brand-icon" aria-hidden="true">PM</span>
+            <span>ProjMgmt</span>
         </a>
 
         <section class="auth-card">
