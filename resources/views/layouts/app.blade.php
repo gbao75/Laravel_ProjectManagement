@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}?v=2">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title', 'ProjectManagement') | ProjectManagement</title>
@@ -20,10 +20,9 @@
 
             <p class="sidebar-label">KHÔNG GIAN LÀM VIỆC</p>
 
-            <div class="workspace-card">
-                <strong>Personal Workspace</strong>
-                <span>Quản lý công việc của bạn</span>
-            </div>
+            @auth
+                @include('workspaces.partials.switcher')
+            @endauth
 
             <nav class="navigation" aria-label="Điều hướng chính">
                 <a
@@ -35,6 +34,13 @@
                 </a>
 
                 <a
+                    href="{{ route('workspaces.index') }}"
+                    class="nav-item {{ request()->routeIs('workspaces.*') ? 'is-active' : '' }}"
+                >
+                    Workspace
+                </a>
+
+                <a
                     href="{{ route('profile.edit') }}"
                     class="nav-item {{ request()->routeIs('profile.*') ? 'is-active' : '' }}"
                     @if (request()->routeIs('profile.*')) aria-current="page" @endif
@@ -42,6 +48,7 @@
                     Hồ sơ cá nhân
                 </a>
 
+        
                 <span class="nav-item is-disabled" aria-disabled="true">
                     Công việc của tôi
                     <small>Sắp có</small>
