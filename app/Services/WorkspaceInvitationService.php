@@ -93,4 +93,115 @@ class WorkspaceInvitationService
             return $invitation;
         });
     }
+
+    public function accept(string $token, User $user): Workspace
+    {
+        $tokenHash = hash('sha256', $token);
+
+        $invitation = WorkspaceInvitation::query()
+            ->where('token_hash', $tokenHash)
+            ->firstOrFail();
+
+        return $this->acceptInvitation(
+            $invitation->id,
+            $user,
+            $tokenHash
+        );
+    }
+
+    public function acceptById(int $invitationId, User $user): Workspace
+    {
+        return $this->acceptInvitation($invitationId, $user);
+    }
+
+    private function acceptInvitation(
+        int $invitationId,
+        User $user,
+        ?string $expectedTokenHash = null
+    ): Workspace {
+        $workspaceId = WorkspaceInvitation::query()
+            ->findOrFail($invitationId)
+            ->workspace_id;
+
+        return DB::transaction(function () use (
+            $invitationId,
+            $workspaceId,
+            $user,
+            $expectedTokenHash
+        ) {
+            $workspace = Workspace::query()
+                ->whereKey($workspaceId)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            $invitation = WorkspaceInvitation::query()
+                ->whereKey($invitationId)
+                ->where('workspace_id', $workspace->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            // Với liên kết email, kiểm tra lại token sau khi khóa bản ghi.
+            if ($expectedTokenHash !== null) {
+                abort_unless(
+                    hash_equals(
+                        $invitation->token_hash,
+                        $expectedTokenHash
+                    ),
+                    404
+                );
+            }
+
+            $user = User::query()
+                ->whereKey($user->id)
+                ->lockForUpdate()
+                ->firstOrFail();
+
+            abort_unless(
+                $user->hasVerifiedEmail(),
+                403,
+                'Bạn cần xác minh email trước khi tham gia.'
+            );
+
+            abort_unless(
+                Str::lower(trim($user->email)) === $invitation->email,
+                403,
+                'Tài khoản hiện tại không phải người nhận lời mời.'
+            );
+
+            abort_if(
+                $invitation->accepted_at !== null,
+                410,
+                'Lời mời đã được sử dụng.'
+            );
+
+            abort_if(
+                $invitation->expires_at->lessThanOrEqualTo(now()),
+                410,
+                'Lời mời đã hết hạn.'
+            );
+
+            abort_if(
+                $workspace->is_personal,
+                403,
+                'Không thể tham gia workspace cá nhân.'
+            );
+
+            $alreadyMember = $workspace->members()
+                ->whereKey($user->id)
+                ->exists();
+
+            if (! $alreadyMember) {
+                $workspace->members()->attach($user->id, [
+                    'role' => 'member',
+                    'joined_at' => now(),
+                ]);
+            }
+
+            $invitation->update([
+                'accepted_at' => now(),
+            ]);
+
+            return $workspace;
+        });
+    }
 }

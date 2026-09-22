@@ -59,15 +59,22 @@
                     Sửa thông tin
                 </a>
             @endcan
-
-            @can('invite', $workspace)
+                
                 <a
-                    href="{{ route('workspaces.invitations.create', $workspace) }}"
+                    href="{{ route('workspaces.projects.index', $workspace) }}"
                     class="primary-button"
                 >
-                    Mời thành viên
+                    Xem dự án
                 </a>
-            @endcan
+
+                <a
+                    href="{{ route('workspaces.members.index', $workspace) }}"
+                    class="primary-button"
+                >
+                    Xem thành viên
+                </a>
+
+                
         </div>
 
         @can('delete', $workspace)
@@ -75,14 +82,14 @@
                 <h2>Xóa workspace</h2>
 
                 <p>
-                    Workspace và danh sách thành viên của workspace sẽ bị xóa
-                    vĩnh viễn.
+                    Workspace, các dự án, lời mời và liên kết thành viên sẽ bị xóa
+                    vĩnh viễn. Tài khoản người dùng vẫn được giữ.
                 </p>
 
                 <form
                     method="POST"
                     action="{{ route('workspaces.destroy', $workspace) }}"
-                    onsubmit="return confirm('Bạn chắc chắn muốn xóa vĩnh viễn workspace này?');"
+                    onsubmit="return confirm('Xóa vĩnh viễn workspace và toàn bộ dự án bên trong?');"
                 >
                     @csrf
                     @method('DELETE')

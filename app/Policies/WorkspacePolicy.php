@@ -42,4 +42,9 @@ class WorkspacePolicy
         return ! $workspace->is_personal
             && $this->update($user, $workspace);
     }
+
+    public function manageMembers(User $user, Workspace $workspace): bool
+    {
+        return $workspace->owner_id === $user->id;
+    }
 }

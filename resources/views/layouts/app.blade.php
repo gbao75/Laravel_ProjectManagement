@@ -35,34 +35,70 @@
 
                 <a
                     href="{{ route('workspaces.index') }}"
-                    class="nav-item {{ request()->routeIs('workspaces.*') ? 'is-active' : '' }}"
+                    class="nav-item {{
+                        request()->routeIs('workspaces.*')
+                        && ! request()->routeIs('workspaces.members.*')
+                        && ! request()->routeIs('workspaces.projects.*')
+                            ? 'is-active'
+                            : ''
+                    }}"
+                    @if (
+                        request()->routeIs('workspaces.*')
+                        && ! request()->routeIs('workspaces.members.*')
+                        && ! request()->routeIs('workspaces.projects.*')
+                    )
+                        aria-current="page"
+                    @endif
                 >
                     Workspace
-                </a>
+                </a>            
+                
 
-                <a
-                    href="{{ route('profile.edit') }}"
-                    class="nav-item {{ request()->routeIs('profile.*') ? 'is-active' : '' }}"
-                    @if (request()->routeIs('profile.*')) aria-current="page" @endif
-                >
-                    Hồ sơ cá nhân
-                </a>
+                @if (isset($currentWorkspace))
+                    <a
+                        href="{{ route('workspaces.projects.index', $currentWorkspace) }}"
+                        class="nav-item {{ request()->routeIs('workspaces.projects.*') ? 'is-active' : '' }}"
+                    >
+                        Dự án
+                    </a>
+                @else
+                    <span class="nav-item is-disabled" aria-disabled="true">
+                        Dự án
+                        <small>Chọn workspace</small>
+                    </span>
+                @endif
 
-        
+                {{-- @if (isset($currentWorkspace))
+                    <a
+                        href="{{ route('workspaces.members.index', $currentWorkspace) }}"
+                        class="nav-item {{ request()->routeIs('workspaces.members.*') ? 'is-active' : '' }}"
+                        @if (request()->routeIs('workspaces.members.*'))
+                            aria-current="page"
+                        @endif
+                    >
+                        Thành viên
+                    </a>
+                @else
+                    <span class="nav-item is-disabled" aria-disabled="true">
+                        Thành viên
+                        <small>Chọn workspace</small>
+                    </span>
+                @endif --}}
+
                 <span class="nav-item is-disabled" aria-disabled="true">
                     Công việc của tôi
                     <small>Sắp có</small>
                 </span>
 
-                <span class="nav-item is-disabled" aria-disabled="true">
-                    Dự án
-                    <small>Sắp có</small>
-                </span>
-
-                <span class="nav-item is-disabled" aria-disabled="true">
-                    Thành viên
-                    <small>Sắp có</small>
-                </span>
+                <a
+                    href="{{ route('my-invitations.index') }}"
+                    class="nav-item {{ request()->routeIs('my-invitations.*') ? 'is-active' : '' }}"
+                    @if (request()->routeIs('my-invitations.*'))
+                        aria-current="page"
+                    @endif
+                >
+                    Lời mời của tôi
+                </a>
             </nav>
 
             <p class="sidebar-footer">
@@ -90,8 +126,27 @@
 
                 <div class="account-actions">
         @auth
-            <a href="{{ route('profile.edit') }}" class="account-placeholder">
-                {{ auth()->user()->name }}
+            <a
+                href="{{ route('profile.edit') }}"
+                class="topbar-avatar {{ request()->routeIs('profile.*') ? 'is-active' : '' }}"
+                title="Hồ sơ cá nhân — {{ auth()->user()->name }}"
+                aria-label="Mở hồ sơ cá nhân của {{ auth()->user()->name }}"
+                @if (request()->routeIs('profile.*')) aria-current="page" @endif
+            >
+                @if (auth()->user()->avatar_path)
+                    <img
+                        src="{{ asset('storage/' . auth()->user()->avatar_path) }}"
+                        alt=""
+                        width="40"
+                        height="40"
+                    >
+                @else
+                    <span aria-hidden="true">
+                        {{ \Illuminate\Support\Str::upper(
+                            \Illuminate\Support\Str::substr(auth()->user()->name, 0, 1)
+                        ) }}
+                    </span>
+                @endif
             </a>
 
             <form method="POST" action="{{ route('logout') }}">

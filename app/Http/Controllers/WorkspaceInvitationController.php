@@ -9,6 +9,7 @@ use App\Services\WorkspaceInvitationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
 
 class WorkspaceInvitationController extends Controller
 {
@@ -62,7 +63,34 @@ class WorkspaceInvitationController extends Controller
 
         return view(
             'workspace-invitations.show',
-            compact('invitation')
+            compact('invitation', 'token')
         );
+    }
+
+    public function continueInvitation(string $token): RedirectResponse
+    {
+        return redirect()->route('workspace-invitations.show', [
+            'token' => $token,
+        ]);
+    }
+
+    public function accept(
+        Request $request,
+        string $token,
+        WorkspaceInvitationService $service
+    ): RedirectResponse {
+        $workspace = $service->accept(
+            $token,
+            $request->user()
+        );
+
+        $request->session()->put(
+            'current_workspace_id',
+            $workspace->id
+        );
+
+        return redirect()
+            ->route('workspaces.show', $workspace)
+            ->with('status', 'Bạn đã tham gia workspace thành công.');
     }
 }

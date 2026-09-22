@@ -1,3 +1,5 @@
+@import 'tailwindcss';
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 :root {
     --background: #f5f7fb;
     --surface: #ffffff;
@@ -961,4 +963,871 @@ h1 {
 .invitation-preview .auth-notice {
     margin-top: 24px;
     text-align: left;
+}
+
+.invitation-preview .invitation-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 12px;
+    text-decoration: none;
+}
+
+.invitation-preview form {
+    margin-top: 20px;
+}
+
+.members-panel {
+    overflow: hidden;
+}
+
+.members-table-wrap {
+    overflow-x: auto;
+}
+
+.members-table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 14px;
+}
+
+.members-table th {
+    padding: 16px 20px;
+    background: #f8f9fc;
+    color: #687087;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.members-table td {
+    padding: 18px 20px;
+    border-top: 1px solid #edf0f5;
+    vertical-align: middle;
+}
+
+.members-table tbody tr:hover {
+    background: #fcfcff;
+}
+
+.member-email {
+    margin-top: 5px;
+    color: #737b90;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.member-self {
+    margin-left: 6px;
+    color: #797f92;
+    font-size: 11px;
+}
+
+.member-role {
+    display: inline-flex;
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: #eeedff;
+    color: #5145cd;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.member-actions,
+.member-role-form {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.member-actions {
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.member-actions form {
+    margin: 0;
+}
+
+.member-role-form select {
+    padding: 8px;
+    border: 1px solid #dfe3ed;
+    border-radius: 8px;
+    background: white;
+    color: #30354b;
+    font: inherit;
+    font-size: 12px;
+}
+
+.member-save-button,
+.member-remove-button {
+    padding: 8px 10px;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.member-save-button {
+    background: #eeedff;
+    color: #5145cd;
+}
+
+.member-save-button:hover {
+    background: #e2dfff;
+}
+
+.member-remove-button {
+    background: #fff1f2;
+    color: #be123c;
+}
+
+.member-remove-button:hover {
+    background: #ffe4e6;
+}
+
+.member-save-button:focus-visible,
+.member-remove-button:focus-visible,
+.member-role-form select:focus-visible {
+    outline: 2px solid #6658ee;
+    outline-offset: 2px;
+}
+
+.members-back-link {
+    margin-top: 24px;
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+    gap: 20px;
+}
+
+.project-card,
+.project-detail,
+.project-form-panel {
+    padding: 24px;
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.project-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.project-card h2 {
+    margin: 18px 0 12px;
+    font-size: 19px;
+    line-height: 1.5;
+}
+
+.project-card h2 a {
+    color: var(--text);
+    text-decoration: none;
+}
+
+.project-card h2 a:hover {
+    color: var(--primary);
+}
+
+.project-card > p {
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.project-card__footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 12px;
+}
+
+.project-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.project-status--planning {
+    background: #eef2ff;
+    color: #4f46e5;
+}
+
+.project-status--in_progress {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.project-status--on_hold {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.project-status--completed {
+    background: #ecfdf5;
+    color: #047857;
+}
+
+.project-form-panel {
+    max-width: 800px;
+}
+
+.project-form input,
+.project-form textarea,
+.project-form select,
+.project-filter select {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: white;
+    color: var(--text);
+    font: inherit;
+}
+
+.project-form textarea {
+    resize: vertical;
+}
+
+.project-form input:focus-visible,
+.project-form textarea:focus-visible,
+.project-form select:focus-visible,
+.project-filter select:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.project-date-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.project-filter {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    font-size: 14px;
+}
+
+.project-filter select {
+    width: auto;
+    max-width: 100%;
+}
+
+.project-filter button {
+    padding: 11px 18px;
+    border: none;
+    border-radius: 10px;
+    background: #eeedff;
+    color: #5145cd;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.project-filter button:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+
+.project-description {
+    margin-top: 16px;
+    line-height: 1.8;
+    white-space: pre-wrap;
+}
+
+@media (max-width: 640px) {
+    .project-date-fields {
+        grid-template-columns: 1fr;
+    }
+}
+
+.my-invitations-count {
+    display: inline-flex;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: #eeedff;
+    color: #5145cd;
+    font-size: 13px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.my-invitations-list {
+    display: grid;
+    gap: 16px;
+}
+
+.my-invitation-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding: 24px;
+}
+
+.my-invitation-main {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    min-width: 0;
+}
+
+.my-invitation-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 48px;
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    background: #eeedff;
+    color: #5145cd;
+    font-size: 20px;
+    font-weight: 800;
+}
+
+.my-invitation-info {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.my-invitation-label {
+    color: #7b8195;
+    font-size: 12px;
+}
+
+.my-invitation-info h2 {
+    margin: 6px 0 10px;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+.my-invitation-info p {
+    margin: 0 0 10px;
+    color: #646b80;
+    font-size: 14px;
+}
+
+.my-invitation-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    color: #7b8195;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.my-invitation-action {
+    flex-shrink: 0;
+    margin: 0;
+}
+
+.my-invitation-action .primary-button {
+    width: auto;
+    padding: 11px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.my-invitations-empty {
+    padding: 40px 24px;
+    text-align: center;
+}
+
+.my-invitations-empty .my-invitation-icon {
+    margin: 0 auto 18px;
+}
+
+.my-invitations-empty h2 {
+    margin-bottom: 12px;
+    font-size: 20px;
+}
+
+.my-invitations-empty p {
+    max-width: 520px;
+    margin: 0 auto 20px;
+    line-height: 1.7;
+}
+
+@media (max-width: 760px) {
+    .my-invitation-card {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .my-invitation-action .primary-button {
+        width: 100%;
+    }
+}
+
+.topbar-avatar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 40px;
+    width: 40px;
+    height: 40px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border: 2px solid white;
+    border-radius: 50%;
+    background: #eeedff;
+    color: #5145cd;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 0 0 1px #e2e5ef;
+    transition: box-shadow 150ms ease;
+}
+
+.topbar-avatar img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.topbar-avatar:hover,
+.topbar-avatar.is-active {
+    box-shadow: 0 0 0 2px #6355ee;
+}
+
+.topbar-avatar:focus-visible {
+    outline: 3px solid #6355ee;
+    outline-offset: 4px;
+}
+
+/* Header tím chàm */
+.topbar {
+    background: linear-gradient(110deg, #312e81 0%, #4338ca 100%);
+    border-bottom: 1px solid #3730a3;
+    box-shadow: 0 3px 12px rgba(49, 46, 129, 0.18);
+    color: #ffffff;
+}
+
+.topbar .breadcrumb {
+    color: #eef2ff;
+    font-weight: 500;
+}
+
+/* Nút Menu và Đăng xuất */
+.topbar .menu-button,
+.topbar .logout-button {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    color: #ffffff;
+    transition: background 150ms ease, border-color 150ms ease;
+}
+
+.topbar .menu-button:hover,
+.topbar .logout-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.6);
+}
+
+/* Avatar nổi bật trên nền đậm */
+.topbar .topbar-avatar {
+    border-color: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.15);
+}
+
+.topbar .topbar-avatar:hover,
+.topbar .topbar-avatar.is-active {
+    box-shadow: 0 0 0 3px #c4b5fd;
+}
+
+/* Liên kết đăng nhập khi chưa có tài khoản đăng nhập */
+.topbar .account-placeholder {
+    background: rgba(255, 255, 255, 0.12);
+    color: #ffffff;
+}
+
+/* Viền khi điều hướng bằng bàn phím */
+.topbar .menu-button:focus-visible,
+.topbar .logout-button:focus-visible,
+.topbar .topbar-avatar:focus-visible,
+.topbar .account-placeholder:focus-visible {
+    outline: 2px solid #ffffff;
+    outline-offset: 4px;
+}
+
+.project-members-page {
+    display: grid;
+    gap: 24px;
+}
+
+.project-members-page .pm-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.project-members-page h1 {
+    margin: 0 0 8px;
+}
+
+.project-members-page h2 {
+    margin: 0 0 16px;
+    font-size: 22px;
+}
+
+.project-members-page .pm-heading p,
+.project-members-page .pm-muted {
+    color: #64748b;
+}
+
+.project-members-page .pm-panel {
+    padding: 28px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    min-width: 0;
+}
+
+.project-members-page .pm-add-form {
+    display: flex;
+    align-items: end;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.project-members-page .pm-field {
+    display: grid;
+    gap: 8px;
+    flex: 1 1 260px;
+    min-width: 0;
+}
+
+.project-members-page label {
+    font-weight: 600;
+}
+
+.project-members-page select {
+    width: 100%;
+    min-height: 46px;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: #fff;
+    color: #0f172a;
+    font: inherit;
+}
+
+.project-members-page button {
+    font: inherit;
+    cursor: pointer;
+}
+
+.project-members-page .pm-primary {
+    min-height: 46px;
+    padding: 10px 18px;
+    border: 0;
+    border-radius: 10px;
+    background: #4f46e5;
+    color: #fff;
+    font-weight: 600;
+}
+
+.project-members-page .pm-primary:hover {
+    background: #4338ca;
+}
+
+.project-members-page .pm-danger {
+    padding: 8px 12px;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    background: #fff1f2;
+    color: #b91c1c;
+}
+
+.project-members-page .pm-danger:hover {
+    background: #ffe4e6;
+}
+
+.project-members-page :is(a, button, select):focus-visible {
+    outline: 3px solid #818cf8;
+    outline-offset: 3px;
+}
+
+.project-members-page .pm-table-scroll {
+    overflow-x: auto;
+}
+
+.project-members-page .pm-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.project-members-page .pm-table th,
+.project-members-page .pm-table td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: middle;
+}
+
+.project-members-page .pm-table th {
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.project-members-page .pm-notice {
+    padding: 14px 18px;
+    border: 1px solid #bbf7d0;
+    border-radius: 12px;
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.project-members-page .pm-error {
+    color: #b91c1c;
+    margin-top: 10px;
+}
+
+@media (max-width: 640px) {
+    .project-members-page .pm-panel {
+        padding: 18px;
+    }
+
+    .project-members-page .pm-primary {
+        width: 100%;
+    }
+}
+
+.task-page {
+    display: grid;
+    gap: 24px;
+}
+
+.task-page .task-heading,
+.task-page .task-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.task-page .task-heading {
+    justify-content: space-between;
+}
+
+.task-page h1 {
+    margin: 0 0 8px;
+}
+
+.task-page .task-heading p,
+.task-page .task-field small {
+    color: #64748b;
+}
+
+.task-page .task-panel {
+    min-width: 0;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+}
+
+.task-page .task-form-panel {
+    width: 100%;
+    max-width: 900px;
+    box-sizing: border-box;
+}
+
+.task-page .task-form,
+.task-page .task-field {
+    display: grid;
+    gap: 10px;
+}
+
+.task-page .task-form {
+    gap: 22px;
+}
+
+.task-page .task-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.task-page label {
+    font-weight: 600;
+}
+
+.task-page input,
+.task-page select,
+.task-page textarea {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 12px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    background: #fff;
+    color: #0f172a;
+    font: inherit;
+}
+
+.task-page textarea {
+    resize: vertical;
+}
+
+.task-page .task-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    box-sizing: border-box;
+    padding: 10px 18px;
+    border: 0;
+    border-radius: 10px;
+    background: #4f46e5;
+    color: #fff;
+    font: inherit;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.task-page .task-primary:hover {
+    background: #4338ca;
+}
+
+.task-page :is(input, select, textarea, button, a):focus-visible {
+    outline: 3px solid #a5b4fc;
+    outline-offset: 3px;
+}
+
+.task-page .task-table-scroll {
+    overflow-x: auto;
+}
+
+.task-page .task-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.task-page .task-table th,
+.task-page .task-table td {
+    padding: 16px 12px;
+    border-bottom: 1px solid #e2e8f0;
+    vertical-align: top;
+}
+
+.task-page .task-table th {
+    background: #f8fafc;
+    color: #64748b;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.task-page .task-title-cell {
+    min-width: 220px;
+    overflow-wrap: anywhere;
+}
+
+.task-page .task-title-cell small {
+    display: block;
+    margin-top: 6px;
+    color: #64748b;
+}
+
+.task-page .task-description {
+    margin-top: 10px;
+    color: #475569;
+}
+
+.task-page .task-description summary {
+    cursor: pointer;
+}
+
+.task-page .task-description p {
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+.task-page .task-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 8px;
+    background: #eef2ff;
+    color: #4338ca;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+.task-page .priority-low {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.task-page .priority-medium {
+    background: #fffbeb;
+    color: #92400e;
+}
+
+.task-page .priority-high {
+    background: #fff1f2;
+    color: #be123c;
+}
+
+.task-page .task-notice,
+.task-page .task-errors {
+    padding: 16px;
+    border-radius: 12px;
+}
+
+.task-page .task-notice {
+    background: #f0fdf4;
+    color: #166534;
+}
+
+.task-page .task-errors {
+    margin-bottom: 20px;
+    background: #fff1f2;
+    color: #9f1239;
+}
+
+.task-page .task-empty {
+    padding: 32px;
+    text-align: center;
+    color: #64748b;
+}
+
+.task-page .task-pagination {
+    margin-top: 20px;
+}
+
+@media (max-width: 640px) {
+    .task-page .task-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .task-page .task-panel {
+        padding: 16px;
+    }
 }
