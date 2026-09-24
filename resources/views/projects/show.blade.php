@@ -66,14 +66,29 @@
                 Sửa dự án
             </a>
         @endcan
+        
+        <a
+            href="{{ route('workspaces.projects.activity.index', [$workspace, $project]) }}"
+            class="text-indigo-600 primary-button"
+        >
+            Lịch sử dự án
+        </a>
 
         <a href="{{ route('workspaces.projects.tasks.index', [
             'workspace' => $workspace,
             'project' => $project,
         ]) }}"
         class="primary-button">
-            Xem công việc
-        </a>    
+            Công việc
+        </a>
+
+        <a href="{{ route('workspaces.projects.board.index', [
+            'workspace' => $workspace,
+            'project' => $project,
+        ]) }}"
+        class="primary-button">
+            Xem Kanban
+        </a>
 
         @can('manageMembers', $project)
             <a href="{{ route('workspaces.projects.members.index', [

@@ -68,27 +68,28 @@
                     </span>
                 @endif
 
-                {{-- @if (isset($currentWorkspace))
-                    <a
-                        href="{{ route('workspaces.members.index', $currentWorkspace) }}"
-                        class="nav-item {{ request()->routeIs('workspaces.members.*') ? 'is-active' : '' }}"
-                        @if (request()->routeIs('workspaces.members.*'))
-                            aria-current="page"
-                        @endif
-                    >
-                        Thành viên
-                    </a>
-                @else
-                    <span class="nav-item is-disabled" aria-disabled="true">
-                        Thành viên
-                        <small>Chọn workspace</small>
-                    </span>
-                @endif --}}
-
-                <span class="nav-item is-disabled" aria-disabled="true">
+             
+                <a
+                    href="{{ route('my-tasks.index') }}"
+                    class="nav-item {{
+                        request()->routeIs('my-tasks.*', 'personal-tasks.*')
+                            ? 'is-active'
+                            : ''
+                    }}"
+                    @if (request()->routeIs('my-tasks.*', 'personal-tasks.*'))
+                        aria-current="page"
+                    @endif
+                >
                     Công việc của tôi
-                    <small>Sắp có</small>
-                </span>
+                </a>
+
+                <a
+                    href="{{ route('time-entries.index') }}"
+                    class="nav-item {{ request()->routeIs('time-entries.*') ? 'is-active' : '' }}"
+                    @if (request()->routeIs('time-entries.*')) aria-current="page" @endif
+                >
+                    Thời gian làm việc
+                </a>
 
                 <a
                     href="{{ route('my-invitations.index') }}"
@@ -125,38 +126,72 @@
                 </div>
 
                 <div class="account-actions">
-        @auth
-            <a
-                href="{{ route('profile.edit') }}"
-                class="topbar-avatar {{ request()->routeIs('profile.*') ? 'is-active' : '' }}"
-                title="Hồ sơ cá nhân — {{ auth()->user()->name }}"
-                aria-label="Mở hồ sơ cá nhân của {{ auth()->user()->name }}"
-                @if (request()->routeIs('profile.*')) aria-current="page" @endif
-            >
-                @if (auth()->user()->avatar_path)
-                    <img
-                        src="{{ asset('storage/' . auth()->user()->avatar_path) }}"
-                        alt=""
-                        width="40"
-                        height="40"
-                    >
-                @else
-                    <span aria-hidden="true">
-                        {{ \Illuminate\Support\Str::upper(
-                            \Illuminate\Support\Str::substr(auth()->user()->name, 0, 1)
-                        ) }}
-                    </span>
-                @endif
-            </a>
+                    @auth
+                        @php
+                            $unreadNotificationCount = auth()->user()
+                                ->unreadNotifications()
+                                ->count();
+                        @endphp
 
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
+                        <a
+                            href="{{ route('notifications.index') }}"
+                            class="notification-bell"
+                            aria-label="Thông báo, {{ $unreadNotificationCount }} chưa đọc"
+                            title="Thông báo"
+                        >
+                            <svg
+                                width="22"
+                                height="22"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                aria-hidden="true"
+                            >
+                                <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/>
+                                <path d="M10 21h4"/>
+                            </svg>
 
-                <button type="submit" class="logout-button">
-                    Đăng xuất
-                </button>
-            </form>
-        @endauth
+                            @if ($unreadNotificationCount > 0)
+                                <span class="notification-badge">
+                                    {{ $unreadNotificationCount > 99 ? '99+' : $unreadNotificationCount }}
+                                </span>
+                            @endif
+                        </a>
+
+                        <a
+                            href="{{ route('profile.edit') }}"
+                            class="topbar-avatar {{ request()->routeIs('profile.*') ? 'is-active' : '' }}"
+                            title="Hồ sơ cá nhân — {{ auth()->user()->name }}"
+                            aria-label="Mở hồ sơ cá nhân của {{ auth()->user()->name }}"
+                            @if (request()->routeIs('profile.*')) aria-current="page" @endif
+                        >
+                            @if (auth()->user()->avatar_path)
+                                <img
+                                    src="{{ asset('storage/' . auth()->user()->avatar_path) }}"
+                                    alt=""
+                                    width="40"
+                                    height="40"
+                                >
+                            @else
+                                <span aria-hidden="true">
+                                    {{ \Illuminate\Support\Str::upper(
+                                        \Illuminate\Support\Str::substr(auth()->user()->name, 0, 1)
+                                    ) }}
+                                </span>
+                            @endif
+                        </a>
+
+                        <form method="POST" action="{{ route('logout') }}">
+                            @csrf
+
+                            <button type="submit" class="logout-button">
+                                Đăng xuất
+                            </button>
+                        </form>
+                    @endauth
 
         @guest
             <a href="{{ route('login') }}" class="account-placeholder">
@@ -167,6 +202,51 @@
             </header>
 
             <main class="page-content" id="main-content">
+                @auth
+                    @php
+                        $activeTimer = \App\Models\TaskTimeEntry::query()
+                            ->where('user_id', auth()->id())
+                            ->whereNull('ended_at')
+                            ->with('task')
+                            ->first();
+                    @endphp
+
+                    @if ($activeTimer)
+                        <div class="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-xl border border-indigo-200 bg-indigo-50 p-4">
+                            <div class="min-w-0">
+                                <p class="text-sm text-indigo-700">Đang ghi thời gian</p>
+
+                                <p class="break-words font-semibold">
+                                    {{ $activeTimer->task?->title ?? 'Công việc' }}
+                                </p>
+
+                                <span
+                                    class="font-mono text-indigo-700"
+                                    data-task-timer
+                                    data-started-at="{{ $activeTimer->started_at->toIso8601String() }}"
+                                >
+                                    Đang tính…
+                                </span>
+                            </div>
+
+                            <form
+                                method="POST"
+                                action="{{ route('time-entries.stop', $activeTimer->id) }}"
+                            >
+                                @csrf
+                                @method('PATCH')
+
+                                <button
+                                    type="submit"
+                                    class="rounded-lg bg-rose-600 px-4 py-2 font-semibold text-white"
+                                >
+                                    Dừng và lưu
+                                </button>
+                            </form>
+                        </div>
+                    @endif
+                @endauth
+
                 @yield('content')
             </main>
         </div>

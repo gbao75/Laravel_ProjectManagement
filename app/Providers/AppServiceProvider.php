@@ -8,6 +8,8 @@ use App\Policies\WorkspacePolicy;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Project;
 use App\Policies\ProjectPolicy;
+use App\Models\Task;
+use App\Observers\TaskObserver;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(Workspace::class, WorkspacePolicy::class);
         Gate::policy(Project::class, ProjectPolicy::class);
+        Task::observe(TaskObserver::class);
     }
 }

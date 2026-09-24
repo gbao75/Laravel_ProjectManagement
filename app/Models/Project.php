@@ -66,4 +66,46 @@ class Project extends Model
     {
         return $this->hasMany(Task::class);
     }
+
+    public function scopeAccessibleTo(Builder $query, User $user): Builder
+    {
+        return $query->where(function (Builder $allowed) use ($user) {
+            // Nhánh 1: Chủ sở hữu workspace.
+            $allowed->whereHas(
+                'workspace',
+                function (Builder $workspace) use ($user) {
+                    $workspace->where('owner_id', $user->id);
+                }
+            );
+
+            // Nhánh 2: Vẫn thuộc workspace và có quyền tại dự án.
+            $allowed->orWhere(function (Builder $memberAccess) use ($user) {
+                $memberAccess->whereHas(
+                    'workspace.members',
+                    function (Builder $members) use ($user) {
+                        $members->where('users.id', $user->id);
+                    }
+                );
+
+                $memberAccess->where(function (Builder $projectAccess) use ($user) {
+                    // Admin workspace.
+                    $projectAccess->whereHas(
+                        'workspace.members',
+                        function (Builder $members) use ($user) {
+                            $members->where('users.id', $user->id)
+                                ->where('workspace_user.role', 'admin');
+                        }
+                    );
+
+                    // Thành viên trực tiếp của dự án.
+                    $projectAccess->orWhereHas(
+                        'members',
+                        function (Builder $members) use ($user) {
+                            $members->where('users.id', $user->id);
+                        }
+                    );
+                });
+            });
+        });
+    }
 }

@@ -30,6 +30,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'notification_preferences' => 'array',
         ];
     }
 
@@ -43,5 +44,25 @@ class User extends Authenticatable implements MustVerifyEmail
     public function ownedWorkspaces(): HasMany
     {
         return $this->hasMany(Workspace::class, 'owner_id');
+    }
+
+    public const DEFAULT_NOTIFICATION_PREFERENCES = [
+        'mentions' => true,
+        'deadlines' => true,
+        'overdue' => true,
+    ];
+
+    public function wantsTaskNotification(string $key): bool
+    {
+        if (! array_key_exists($key, self::DEFAULT_NOTIFICATION_PREFERENCES)) {
+            return false;
+        }
+
+        $preferences = $this->notification_preferences ?? [];
+
+        return (bool) (
+            $preferences[$key]
+            ?? self::DEFAULT_NOTIFICATION_PREFERENCES[$key]
+        );
     }
 }

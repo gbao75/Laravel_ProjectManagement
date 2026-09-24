@@ -114,7 +114,7 @@
                 {{ $project->exists ? 'Lưu thay đổi' : 'Tạo dự án' }}
             </button>
 
-            <a href="{{ route('workspaces.projects.index', $workspace) }}">
+            <a href="{{ route('workspaces.projects.index', $workspace) }} " class="primary-button">
                 Quay lại danh sách
             </a>
         </form>

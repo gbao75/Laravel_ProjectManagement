@@ -10,6 +10,16 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\MyWorkspaceInvitationController;
 use App\Http\Controllers\ProjectMemberController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\MyTaskController;
+use App\Http\Controllers\PersonalTaskController;
+use App\Http\Controllers\SavedTaskFilterController;
+use App\Http\Controllers\ProjectBoardController;
+use App\Http\Controllers\TaskDetailController;
+use App\Http\Controllers\TaskAttachmentController;
+use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\NotificationPreferenceController;
+use App\Http\Controllers\TaskTimerController;
+use App\Http\Controllers\TaskRecurrenceController;
 
 Route::redirect('/', '/dashboard');
 
@@ -218,4 +228,180 @@ Route::middleware(['auth', 'verified', 'workspace.context'])
 
         Route::post('/', [TaskController::class, 'store'])
             ->name('store');
+
+        Route::get('/{task}/edit', [TaskController::class, 'edit'])
+            ->name('edit');
+
+        Route::put('/{task}', [TaskController::class, 'update'])
+            ->name('update');
+
+        Route::patch('/{task}/status', [TaskController::class, 'updateStatus'])
+            ->name('status.update');
+
+        Route::delete('/{task}', [TaskController::class, 'destroy'])
+            ->name('destroy');
+    });
+
+Route::get('/my-tasks', [MyTaskController::class, 'index'])
+    ->middleware(['auth', 'verified', 'workspace.context'])
+    ->name('my-tasks.index');
+
+Route::middleware(['auth', 'verified', 'workspace.context'])
+    ->group(function () {
+        Route::get('/personal-tasks/create', [
+            PersonalTaskController::class,
+            'create',
+        ])->name('personal-tasks.create');
+
+        Route::post('/personal-tasks', [
+            PersonalTaskController::class,
+            'store',
+        ])->name('personal-tasks.store');
+
+        Route::get('/personal-tasks/{task}/edit', [
+            PersonalTaskController::class,
+            'edit',
+        ])->whereNumber('task')->name('personal-tasks.edit');
+
+        Route::put('/personal-tasks/{task}', [
+            PersonalTaskController::class,
+            'update',
+        ])->whereNumber('task')->name('personal-tasks.update');
+
+        Route::delete('/personal-tasks/{task}', [
+            PersonalTaskController::class,
+            'destroy',
+        ])->whereNumber('task')->name('personal-tasks.destroy');
+
+        Route::post('/my-task-filters', [
+            SavedTaskFilterController::class,
+            'store',
+        ])->name('my-task-filters.store');
+
+        Route::delete('/my-task-filters/{filter}', [
+            SavedTaskFilterController::class,
+            'destroy',
+        ])->whereNumber('filter')->name('my-task-filters.destroy');
+    });
+
+Route::middleware(['auth', 'verified', 'workspace.context'])
+    ->prefix('workspaces/{workspace}/projects/{project}/board')
+    ->name('workspaces.projects.board.')
+    ->scopeBindings()
+    ->group(function () {
+        Route::get('/', [ProjectBoardController::class, 'index'])
+            ->name('index');
+
+        Route::patch('/move', [ProjectBoardController::class, 'move'])
+            ->name('move');
+    });
+
+Route::middleware(['auth', 'verified', 'workspace.context'])
+    ->prefix('workspaces/{workspace}/projects/{project}')
+    ->name('workspaces.projects.')
+    ->scopeBindings()
+    ->group(function () {
+        Route::get('/activity', [
+            TaskDetailController::class,
+            'activity',
+        ])->name('activity.index');
+
+        Route::prefix('tasks/{task}')
+            ->name('tasks.')
+            ->group(function () {
+                Route::get('/', [
+                    TaskDetailController::class,
+                    'show',
+                ])->name('show');
+
+                Route::post('/mentions', [
+                    TaskDetailController::class,
+                    'mention',
+                ])->middleware('throttle:10,1')
+                    ->name('mentions.store');
+
+                Route::post('/attachments', [
+                    TaskAttachmentController::class,
+                    'store',
+                ])->name('attachments.store');
+
+                Route::get('/attachments/{attachment}/download', [
+                    TaskAttachmentController::class,
+                    'download',
+                ])->whereNumber('attachment')
+                    ->name('attachments.download');
+
+                Route::delete('/attachments/{attachment}', [
+                    TaskAttachmentController::class,
+                    'destroy',
+                ])->whereNumber('attachment')
+                    ->name('attachments.destroy');
+            });
+    });
+
+Route::middleware(['auth', 'verified', 'workspace.context'])
+    ->prefix('notifications')
+    ->name('notifications.')
+    ->group(function () {
+        Route::get('/preferences', [
+            NotificationPreferenceController::class,
+            'edit',
+        ])->name('preferences.edit');
+
+        Route::put('/preferences', [
+            NotificationPreferenceController::class,
+            'update',
+        ])->name('preferences.update');
+
+        Route::get('/', [
+            NotificationController::class,
+            'index',
+        ])->name('index');
+
+        Route::patch('/read-all', [
+            NotificationController::class,
+            'readAll',
+        ])->name('read-all');
+
+        Route::post('/{notification}/open', [
+            NotificationController::class,
+            'open',
+        ])->whereUuid('notification')
+            ->name('open');
+
+        Route::patch('/{notification}/read', [
+            NotificationController::class,
+            'read',
+        ])->whereUuid('notification')
+            ->name('read');
+        
+    });
+
+Route::middleware(['auth', 'verified', 'workspace.context'])
+    ->group(function () {
+        Route::get('/time-entries', [
+            TaskTimerController::class,
+            'index',
+        ])->name('time-entries.index');
+
+        Route::post('/tasks/{task}/timer', [
+            TaskTimerController::class,
+            'start',
+        ])->name('tasks.timer.start');
+
+        Route::patch('/time-entries/{entry}/stop', [
+            TaskTimerController::class,
+            'stop',
+        ])->whereNumber('entry')
+            ->name('time-entries.stop');
+
+        Route::put('/tasks/{task}/recurrence', [
+            TaskRecurrenceController::class,
+            'save',
+        ])->name('tasks.recurrence.save');
+
+        Route::patch('/tasks/{task}/recurrence/pause', [
+            TaskRecurrenceController::class,
+            'pause',
+        ])->name('tasks.recurrence.pause');
     });
