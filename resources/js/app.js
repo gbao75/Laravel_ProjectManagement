@@ -1,5 +1,7 @@
 import './project-board';
 import './task-timer';
+import './realtime';
+import './task-calendar';
 const menuToggle = document.querySelector('#menu-toggle');
 const sidebar = document.querySelector('#sidebar');
 

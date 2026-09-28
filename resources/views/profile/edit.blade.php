@@ -229,6 +229,12 @@
                     Đổi mật khẩu
                 </button>
             </form>
+
+            <div>
+                <a href="{{ route('api-tokens.index') }}" class="text-indigo-600 primary-button">
+                    Quản lý API token
+                </a>
+            </div>
         </section>
     </div>
 @endsection

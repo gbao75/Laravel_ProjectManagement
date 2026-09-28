@@ -20,13 +20,18 @@ use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\NotificationPreferenceController;
 use App\Http\Controllers\TaskTimerController;
 use App\Http\Controllers\TaskRecurrenceController;
-
+use App\Http\Controllers\CalendarController;
+use App\Http\Controllers\ApiTokenController;
+use App\Http\Controllers\WorkspaceReportController;
+use App\Http\Controllers\TaskTrashController;
 Route::redirect('/', '/dashboard');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class, 'index'])
-        ->name('dashboard');
-});
+Route::get('/dashboard', [
+    DashboardController::class,
+    'index',
+])
+    ->middleware(['auth', 'verified', 'workspace.context'])
+    ->name('dashboard');
 
 //Profile
 Route::middleware('auth')->group(function () {
@@ -294,6 +299,11 @@ Route::middleware(['auth', 'verified', 'workspace.context'])
 
         Route::patch('/move', [ProjectBoardController::class, 'move'])
             ->name('move');
+        
+        Route::get('/version', [
+            ProjectBoardController::class,
+            'version',
+        ])->name('version');
     });
 
 Route::middleware(['auth', 'verified', 'workspace.context'])
@@ -374,7 +384,11 @@ Route::middleware(['auth', 'verified', 'workspace.context'])
             'read',
         ])->whereUuid('notification')
             ->name('read');
-        
+
+        Route::get('/unread-count', [
+            NotificationController::class,
+            'unreadCount',
+        ])->name('unread-count');
     });
 
 Route::middleware(['auth', 'verified', 'workspace.context'])
@@ -404,4 +418,79 @@ Route::middleware(['auth', 'verified', 'workspace.context'])
             TaskRecurrenceController::class,
             'pause',
         ])->name('tasks.recurrence.pause');
+    });
+
+//Calendar
+Route::middleware(['auth', 'verified', 'workspace.context'])
+    ->prefix('calendar')
+    ->name('calendar.')
+    ->group(function () {
+        Route::get('/', [
+            CalendarController::class,
+            'index',
+        ])->name('index');
+
+        Route::get('/events', [
+            CalendarController::class,
+            'events',
+        ])->name('events');
+    });
+
+Route::middleware(['auth', 'verified', 'workspace.context'])
+    ->prefix('api-tokens')
+    ->name('api-tokens.')
+    ->group(function () {
+        Route::get('/', [
+            ApiTokenController::class,
+            'index',
+        ])->name('index');
+
+        Route::post('/', [
+            ApiTokenController::class,
+            'store',
+        ])->middleware('throttle:5,1')
+            ->name('store');
+
+        Route::delete('/{token}', [
+            ApiTokenController::class,
+            'destroy',
+        ])->whereNumber('token')
+            ->name('destroy');
+    });
+
+Route::middleware(['auth', 'verified', 'workspace.context'])
+    ->prefix('workspaces/{workspace}/reports')
+    ->name('workspaces.reports.')
+    ->group(function () {
+        Route::get('/', [
+            WorkspaceReportController::class,
+            'index',
+        ])->name('index');
+
+        Route::get('/tasks.csv', [
+            WorkspaceReportController::class,
+            'export',
+        ])->name('export');
+    });
+
+Route::middleware(['auth', 'verified', 'workspace.context'])
+    ->prefix('trash/tasks')
+    ->name('trash.tasks.')
+    ->group(function () {
+        Route::get('/', [TaskTrashController::class, 'index'])
+            ->name('index');
+
+        Route::patch('/{task}/restore', [
+            TaskTrashController::class,
+            'restore',
+        ])
+            ->whereNumber('task')
+            ->name('restore');
+
+        Route::delete('/{task}', [
+            TaskTrashController::class,
+            'destroy',
+        ])
+            ->whereNumber('task')
+            ->name('destroy');
     });

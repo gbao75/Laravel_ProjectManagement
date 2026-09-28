@@ -151,4 +151,15 @@ class ProjectBoardController extends Controller
                 ]);
         }
     }
+
+    public function version(
+        Workspace $workspace,
+        Project $project
+    ): JsonResponse {
+        Gate::authorize('view', $project);
+
+        return response()->json([
+            'version' => (int) $project->board_version,
+        ])->header('Cache-Control', 'no-store');
+    }
 }

@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}?v=2">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    
     <title>@yield('title', 'ProjectManagement') | ProjectManagement</title>
-
+    @auth
+        <meta name="user-id" content="{{ auth()->id() }}">
+    @endauth
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body>
@@ -84,6 +86,14 @@
                 </a>
 
                 <a
+                    href="{{ route('calendar.index') }}"
+                    class="nav-item {{ request()->routeIs('calendar.*') ? 'is-active' : '' }}"
+                    @if (request()->routeIs('calendar.*')) aria-current="page" @endif
+                >
+                    Lịch công việc
+                </a>
+
+                <a
                     href="{{ route('time-entries.index') }}"
                     class="nav-item {{ request()->routeIs('time-entries.*') ? 'is-active' : '' }}"
                     @if (request()->routeIs('time-entries.*')) aria-current="page" @endif
@@ -99,6 +109,16 @@
                     @endif
                 >
                     Lời mời của tôi
+                </a>
+
+                <a
+                    href="{{ route('trash.tasks.index') }}"
+                    class="nav-item {{ request()->routeIs('trash.tasks.*') ? 'is-active' : '' }}"
+                    @if (request()->routeIs('trash.tasks.*'))
+                        aria-current="page"
+                    @endif
+                >
+                    Thùng rác
                 </a>
             </nav>
 
@@ -134,7 +154,9 @@
                         @endphp
 
                         <a
+                            id="notification-bell"
                             href="{{ route('notifications.index') }}"
+                            data-count-url="{{ route('notifications.unread-count') }}"
                             class="notification-bell"
                             aria-label="Thông báo, {{ $unreadNotificationCount }} chưa đọc"
                             title="Thông báo"
@@ -154,11 +176,15 @@
                                 <path d="M10 21h4"/>
                             </svg>
 
-                            @if ($unreadNotificationCount > 0)
-                                <span class="notification-badge">
-                                    {{ $unreadNotificationCount > 99 ? '99+' : $unreadNotificationCount }}
-                                </span>
-                            @endif
+                            <span
+                                id="notification-count"
+                                class="notification-badge"
+                                @if ($unreadNotificationCount === 0) hidden @endif
+                            >
+                                {{ $unreadNotificationCount > 99 ? '99+' : $unreadNotificationCount }}
+                            </span>
+
+                            
                         </a>
 
                         <a

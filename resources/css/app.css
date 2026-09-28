@@ -2378,3 +2378,35 @@ h1 {
     font-size: 11px;
     font-weight: 700;
 }
+
+.notification-badge[hidden] {
+    display: none;
+}  
+
+#task-calendar {
+    --fc-border-color: #e2e8f0;
+    --fc-button-bg-color: #4f46e5;
+    --fc-button-border-color: #4f46e5;
+    --fc-button-hover-bg-color: #4338ca;
+    --fc-button-hover-border-color: #4338ca;
+    --fc-button-active-bg-color: #3730a3;
+    --fc-button-active-border-color: #3730a3;
+    --fc-today-bg-color: #eef2ff;
+}
+
+#task-calendar .fc-toolbar-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+#task-calendar .fc-event-title {
+    white-space: normal;
+}
+
+@media (max-width: 768px) {
+    #task-calendar .fc-header-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+}

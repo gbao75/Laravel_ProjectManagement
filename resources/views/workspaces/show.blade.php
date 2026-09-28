@@ -73,7 +73,15 @@
                 >
                     Xem thành viên
                 </a>
-
+                
+                @can('update', $workspace)
+                    <a
+                        href="{{ route('workspaces.reports.index', $workspace) }}"
+                        class="text-indigo-600 primary-button"
+                    >
+                        Báo cáo công việc
+                    </a>
+                @endcan
                 
         </div>
 

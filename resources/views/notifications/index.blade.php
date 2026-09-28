@@ -40,6 +40,23 @@
             </form>
         </header>
 
+        <div
+            id="notifications-live-notice"
+            hidden
+            class="rounded-xl border border-indigo-200 bg-indigo-50 p-4 text-indigo-800"
+            role="status"
+        >
+            Danh sách thông báo đã thay đổi.
+
+            <button
+                type="button"
+                data-reload-page
+                class="ml-2 font-semibold underline"
+            >
+                Tải danh sách mới
+            </button>
+        </div>
+
         <div class="space-y-4">
             @forelse ($notifications as $notification)
                 <article

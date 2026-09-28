@@ -4,6 +4,9 @@
         'task.updated' => 'đã cập nhật công việc',
         'task.deleted' => 'đã xóa công việc',
         'task.mentioned' => 'đã nhắc tên thành viên',
+        'task.trashed' => 'Đã chuyển công việc vào thùng rác',
+        'task.restored' => 'Đã khôi phục công việc',
+        'task.force_deleted' => 'Đã xóa vĩnh viễn công việc',
         'attachment.created' => 'đã tải tệp lên',
         'attachment.deleted' => 'đã xóa tệp',
     ];

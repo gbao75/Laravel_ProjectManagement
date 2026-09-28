@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 use App\Notifications\TaskDeadlineReminder;
+use App\Events\NotificationsChanged;
+use Illuminate\Http\JsonResponse;
 
 class NotificationController extends Controller
 {
@@ -109,6 +111,21 @@ class NotificationController extends Controller
             ->unreadNotifications()
             ->update(['read_at' => now()]);
 
+        NotificationsChanged::dispatch(
+            (int) $request->user()->id
+        );
+
         return back()->with('status', 'Đã đọc tất cả thông báo.');
+    }
+
+    public function unreadCount(Request $request): JsonResponse
+    {
+        return response()->json([
+            'user_id' => $request->user()->id,
+
+            'count' => $request->user()
+                ->unreadNotifications()
+                ->count(),
+        ])->header('Cache-Control', 'no-store');
     }
 }

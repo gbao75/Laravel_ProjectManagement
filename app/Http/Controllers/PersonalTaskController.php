@@ -7,7 +7,7 @@ use App\Models\Task;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
-
+use Illuminate\Support\Facades\DB;
 class PersonalTaskController extends Controller
 {
     public function create(): View
@@ -64,14 +64,20 @@ class PersonalTaskController extends Controller
 
     public function destroy(Task $task): RedirectResponse
     {
-        abort_unless($task->project_id === null, 404);
+        DB::transaction(function () use ($task) {
+            $current = Task::query()
+                ->whereKey($task->id)
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        Gate::authorize('delete', $task);
+            Gate::authorize('delete', $current);
 
-        $task->delete();
+            $current->delete();
+        }, 3);
 
-        return to_route('my-tasks.index', ['scope' => 'personal'])
-            ->with('status', 'Đã xóa công việc cá nhân.');
+        return redirect()
+            ->route('my-tasks.index', ['scope' => 'personal'])
+            ->with('status', 'Đã chuyển công việc vào thùng rác.');
     }
 
     private function fillFields(Task $task, array $data): void

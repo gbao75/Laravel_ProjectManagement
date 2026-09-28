@@ -12,7 +12,26 @@
             'workspace' => $workspace,
             'project' => $project,
         ]) }}"
+        data-project-id="{{ $project->id }}"
+        data-version-url="{{ route('workspaces.projects.board.version', [$workspace, $project]) }}"
     >
+        <div
+            id="board-realtime-notice"
+            hidden
+            class="rounded-xl border border-amber-200 bg-amber-50 p-4 text-amber-900"
+            role="status"
+        >
+            Bảng đã thay đổi ở nơi khác.
+
+            <button
+                type="button"
+                data-reload-page
+                class="ml-2 font-semibold underline"
+            >
+                Tải bảng mới
+            </button>
+        </div>
+
         <div class="kanban-heading">
             <div>
                 <h1>Kanban</h1>
