@@ -176,7 +176,6 @@ class SendTaskDeadlineReminders extends Command
                 'sent_at' => now(),
             ]);
 
-            // Ghi notification trong cùng transaction.
             $recipient->notify(
                 new TaskDeadlineReminder($task, $kind)
             );

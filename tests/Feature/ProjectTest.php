@@ -135,7 +135,7 @@ class ProjectTest extends TestCase
         ]);
 
         $project = $this->project();
-
+        $project->members()->attach($member->id);
         $this->actingAs($member)
             ->get($this->url('show', $project))
             ->assertOk();
