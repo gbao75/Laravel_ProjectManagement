@@ -1,0 +1,104 @@
+name: projectmanagement
+
+x-php-service: &php-service
+  image: projectmanagement-local
+  build:
+    context: .
+  env_file:
+    - .env.docker
+  volumes:
+    - app-storage:/var/www/html/storage
+  restart: unless-stopped
+
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: Laravel_ProjectManagement
+      MYSQL_USER: projectmanagement
+      MYSQL_PASSWORD: local_database_password
+      MYSQL_ROOT_PASSWORD: local_root_password
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - 'MYSQL_PWD="$${MYSQL_PASSWORD}" mysql -h 127.0.0.1 -u "$${MYSQL_USER}" "$${MYSQL_DATABASE}" -e "SELECT 1"'
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 30s
+    restart: unless-stopped
+
+  mailpit:
+    image: axllent/mailpit:v1.27
+    ports:
+      - "127.0.0.1:8025:8025"
+    restart: unless-stopped
+
+  init:
+    <<: *php-service
+    command: ["php", "artisan", "migrate", "--force"]
+    restart: "no"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  app:
+    <<: *php-service
+    command:
+      - php
+      - artisan
+      - serve
+      - --host=0.0.0.0
+      - --port=8000
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on:
+      init:
+        condition: service_completed_successfully
+      mailpit:
+        condition: service_started
+
+  reverb:
+    <<: *php-service
+    command:
+      - php
+      - artisan
+      - reverb:start
+      - --host=0.0.0.0
+      - --port=8080
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      init:
+        condition: service_completed_successfully
+
+  queue:
+    <<: *php-service
+    command:
+      - php
+      - artisan
+      - queue:work
+      - --sleep=1
+      - --tries=3
+      - --timeout=60
+    stop_grace_period: 90s
+    depends_on:
+      init:
+        condition: service_completed_successfully
+      reverb:
+        condition: service_started
+      mailpit:
+        condition: service_started
+
+  scheduler:
+    <<: *php-service
+    command: ["php", "artisan", "schedule:work"]
+    depends_on:
+      init:
+        condition: service_completed_successfully
+
+volumes:
+  mysql-data:
+  app-storage:

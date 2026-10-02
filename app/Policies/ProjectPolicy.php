@@ -22,12 +22,10 @@ class ProjectPolicy
             return false;
         }
 
-        // Owner/Admin workspace được xem mọi dự án.
         if ($user->can('update', $workspace)) {
             return true;
         }
 
-        // Member chỉ xem dự án được thêm vào.
         return $project->members()
             ->where('users.id', $user->id)
             ->exists();
