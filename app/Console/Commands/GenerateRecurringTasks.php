@@ -37,7 +37,7 @@ class GenerateRecurringTasks extends Command
 
         $query = TaskRecurrence::query()
             ->where('is_active', true)
-            ->where('next_run_on', '<=', $today);
+            ->whereDate('next_run_on', '<=', $today);
 
         if ($ruleOption !== null) {
             $query->whereKey((int) $ruleOption);

@@ -47,7 +47,7 @@ class SendTaskDeadlineReminders extends Command
         $query = Task::query()
             ->select('id')
             ->whereNotNull('due_date')
-            ->where('due_date', '<=', $tomorrow)
+            ->whereDate('due_date', '<=', $tomorrow)
             ->where('status', '!=', 'completed');
 
         if ($taskOption !== null) {
